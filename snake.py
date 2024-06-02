@@ -1,57 +1,59 @@
 from turtle import Turtle
-
 STARTING_POSITIONS = [(0, 0), (-20, 0), (-40, 0)]
 MOVE_DISTANCE = 20
 UP = 90
 DOWN = 270
-RIGHT = 0
 LEFT = 180
+RIGHT = 0
+
+
 class Snake:
 
-    def __init__(self) :
-        self.snake_blocks = []
+    def __init__(self):
+        self.segments = []
         self.create_snake()
-        self.head = self.snake_blocks[0]
-
+        self.head = self.segments[0]
 
     def create_snake(self):
-        for positions in STARTING_POSITIONS:
-             self.add_sblock(positions)
+        for position in STARTING_POSITIONS:
+            self.add_segment(position)
 
+    def add_segment(self, position):
+        new_segment = Turtle("square")
+        new_segment.color("white")
+        new_segment.penup()
+        new_segment.goto(position)
+        self.segments.append(new_segment)
 
-    def add_sblock(self, positions):
-            new_sblock = Turtle("square")
-            new_sblock.color("white")
-            new_sblock.penup()
-            new_sblock.goto(positions)
-            self.snake_blocks.append(new_sblock)
+    def reset(self):
+        for seg in self.segments:
+            seg.goto(1000,1000)
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
 
     def extend(self):
-         self.add_sblock(self.snake_blocks[-1].position())
-        
-    def move(self):
-            for i in range(len(self.snake_blocks)-1, 0, -1): #Last block take the position of second last block.
-                new_x = self.snake_blocks[i-1].xcor()
-                new_y = self.snake_blocks[i-1].ycor()
-                self.snake_blocks[i].goto(new_x, new_y)
-            self.head.forward(MOVE_DISTANCE)
+        self.add_segment(self.segments[-1].position())
 
+    def move(self):
+        for seg_num in range(len(self.segments) - 1, 0, -1):
+            new_x = self.segments[seg_num - 1].xcor()
+            new_y = self.segments[seg_num - 1].ycor()
+            self.segments[seg_num].goto(new_x, new_y)
+        self.head.forward(MOVE_DISTANCE)
 
     def up(self):
         if self.head.heading() != DOWN:
             self.head.setheading(UP)
 
-
     def down(self):
         if self.head.heading() != UP:
-            self.head.setheading(DOWN)    
-
+            self.head.setheading(DOWN)
 
     def left(self):
         if self.head.heading() != RIGHT:
-            self.head.setheading(LEFT)   
-
+            self.head.setheading(LEFT)
 
     def right(self):
         if self.head.heading() != LEFT:
-            self.head.setheading(RIGHT)   
+            self.head.setheading(RIGHT)
